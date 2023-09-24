@@ -1,3 +1,7 @@
 [
-  {"name":  ""}
+  {
+    "name": "project-a",
+    "source": "https://raw.githubusercontent.com/r-burchnall/dependencies/main/examples/project-a/dependencies.json",
+    "version": "1.0.0"
+  }
 ]
