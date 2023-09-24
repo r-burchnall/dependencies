@@ -1,0 +1,17 @@
+{
+  "name": "dependencies",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest",
+    "ts-node": "^10.9.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.6.3",
+    "jest": "^29.7.0"
+  }
+}
