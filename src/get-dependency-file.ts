@@ -2,7 +2,6 @@ import {Project} from "./types.ts";
 
 const fetchDependency = async (p: Project): Promise<any> => {
     const resp = await fetch(p.source)
-    console.log('resp', {resp})
     return await resp.json()
 }
 
