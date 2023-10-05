@@ -15,12 +15,13 @@ export function ExecuteFetchAndDeploy(configuration: Configurations, resolvedTre
         try {
             fs.statSync(repo)
         } catch (e) {
-            console.error(e)
+            console.log('Cloning repo', {gitUrl})
             execSync(`${configuration.cloneCommand} ${gitUrl}`, {stdio: 'inherit'})
         }
 
-        console.log(`${repo}: Checking out project version: ${project.version}`)
-        execSync(`cd ${repo} && git checkout ${project.version}`, {stdio: 'inherit'})
+        const isTag = project.version.match(/^[v]?\d.\d.\d$/)
+        console.log(`${repo}: Checking out project ${isTag ? 'tag' : 'branch'}: ${project.version}`)
+        execSync(`cd ${repo} && git fetch --all --tags && git checkout ${isTag ? 'tags/' + project.version : project.version}`, {stdio: 'inherit'})
 
         console.log(`${repo}: Running deployment out project version: ${project.version}`)
         execSync(`cd ${repo} && ${configuration.deploymentCommand}`, {stdio: 'inherit'})

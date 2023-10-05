@@ -1,21 +1,22 @@
 import {Project} from "./types.ts";
-import fetch from 'node-fetch';
+import fetch, {Response} from 'node-fetch';
 
 const fetchDependency = async (p: Project): Promise<any> => {
     if (!process.env.GITHUB_TOKEN) throw new Error("GITHUB_TOKEN is not set")
 
     let url = p.source
     if(url.includes("https://github.com")) {
-        url = url.replace("https://github.com", "https://api.github.com/repos") + `/dependencies.json?ref=${p.version}`
+        url = url.replace("https://github.com", "https://api.github.com/repos") + `/contents/dependencies.json?ref=${p.version}`
     }
 
-    let resp = {};
+    console.log('Getting dependencies for', {url})
+    let resp: Response | undefined = undefined
     try {
         resp = await fetch(url, {
             headers: {
                 "Accept": "application/vnd.github+json",
                 "X-GitHub-Api-Version": "2022-11-28",
-                "Authorization": "Bearer" + process.env.GITHUB_TOKEN
+                "Authorization": "Bearer " + process.env.GITHUB_TOKEN
             }
         })
     } catch (e) {
@@ -23,8 +24,9 @@ const fetchDependency = async (p: Project): Promise<any> => {
     }
 
     try {
-        // @ts-ignore
-        return await resp.json()
+        const json: any = await resp.json()
+        const content = JSON.parse(Buffer.from(json.content, 'base64').toString('utf-8'))
+        return content
     } catch (e) {
         throw new Error(`Invalid json response from ${url}`)
     }
